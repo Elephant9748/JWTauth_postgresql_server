@@ -1,9 +1,7 @@
 import { ApolloServer, PubSub } from "apollo-server-express";
 import express from "express";
-import session from "express-session";
-import connectRedis from "connect-redis";
-import redis from "redis";
 import http from "http";
+import cookieParser from "cookie-parser";
 
 import "dotenv/config";
 
@@ -13,17 +11,13 @@ import ps from "./models";
 import Dataloader from "dataloader";
 import { batchBooks, batchPersons } from "./mydataloader";
 
-import { getAuth } from "./authjwt";
+import { getAuth, createToken } from "./authjwt";
+import { verify } from "jsonwebtoken";
 
 const {
   APP_PORT,
-  REDIS_HOST,
-  REDIS_PORT,
-  REDIS_PASSWORD,
-  SESS_NAME,
-  SESS_SECRET,
-  SESS_LIFETIME,
-  NODE_ENV
+  NODE_ENV,
+  REFRESH_TOKEN_SECRET,
 } = process.env;
 const IN_PROD = NODE_ENV === "production";
 
@@ -33,41 +27,69 @@ const startServer = async () => {
       .authenticate()
       .then(() => {
         console.log("Connection has been established successfully.");
-        // ps.sequelize.sync().then(() => console.log(" ==>  Sync models ... success !"));
+        // sync table and schema 
+        // await ps.sequelize.sync().then(() => console.log(" ==>  Sync models ... success !"));
       })
       .catch(err => {
         console.error("Unable to connect to the database:", err);
       });
 
     const app = express();
+    app.use(cookieParser());
+    app.post("/refresh_token", async (req, res) => {
 
-    //add redis store
-    // let redisStore = connectRedis(session);
+      //get token
+      const token = req.cookies.jid;
+      if (!token) {
+        return res.send({
+          rToken: false,
+          accessToken: "",
+          msg: "Not getting token !"
+        });
+      }
 
-    // let client = new redis.createClient({
-    //   host: REDIS_HOST,
-    //   port: REDIS_PORT,
-    //   password: REDIS_PASSWORD
-    //   // db: REDIS_DB,
-    // });
+      //varify jwt
+      let payload;
+      try {
+        payload = verify(token, REFRESH_TOKEN_SECRET);
+      } catch ({ message }) {
+        console.log(message);
+        return res.send({
+          rToken: false,
+          accessToken: "",
+          msg: message || ""
+        });
+      }
+      
+      //find user on db
+      const user = await ps.User.findOne({ where: { userId: payload.userId } });
+      if (!user) {
+        return res.send({
+          rToken: false,
+          accessToken: "",
+          err: "payload not found !"
+        });
+      }
 
-    // client.unref();
-    // client.on("error", console.log);
+      //revoke access token !need more dev for this
+      if(user.tokenversion !== payload.tokenversion){
+        return res.send({
+          rToken: false,
+          accessToken: "",
+          msg: "revokeAllToken"
+        });
+      }
 
-    //adding session
-    // const sessionMiddleware = session({
-    //   store: new redisStore({ client }),
-    //   name: SESS_NAME,
-    //   secret: SESS_SECRET,
-    //   resave: false,
-    //   saveUninitialized: false,
-    //   cookie: {
-    //     maxAge: parseInt(SESS_LIFETIME),
-    //     sameSites: true,
-    //     secure: IN_PROD
-    //   }
-    // });
-    // app.use(sessionMiddleware);
+      //here can create refresh token (refresh expired)
+      // --
+
+      //send the access token
+      return res.send({
+        rToken: true,
+        accessToken: createToken(user),
+        msg: ""
+      });
+    });
 
     //addind Subscriptions
     const pubsub = new PubSub();
@@ -107,7 +129,6 @@ const startServer = async () => {
 
     const httpServer = http.createServer(app);
     server.installSubscriptionHandlers(httpServer);
-    // ⚠️ Pay attention to the fact that we are calling `listen` on the http server variable, and not on `app`.
     httpServer.listen({ port: APP_PORT }, () => {
       console.log(
         `🚀 Server ready at http://localhost:${APP_PORT}${server.graphqlPath}`
@@ -116,12 +137,6 @@ const startServer = async () => {
         `🚀 Subscriptions ready at ws://localhost:${APP_PORT}${server.subscriptionsPath}`
       );
     });
-
-    // app.listen({ port: APP_PORT }, () =>
-    //   console.log(
-    //     `🚀 Server ready at http://localhost:4000${server.graphqlPath}`
-    //   )
-    // );
   } catch (e) {
     console.error(e);
   }

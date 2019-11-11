@@ -9,13 +9,14 @@ export default gql`
   extend type Mutation {
     newUser(name: String!, password: String!):User
     logIn(name: String!, password: String!):loginResponse
-    logOut: String!
+    revokeTokenForUser(userId: ID!): Boolean
   }
 
   type User {
     userId: ID!
     name: String!
     password: String!
+    tokenversion: Int
     createdAt: String!
     updatedAt: String!
   }

@@ -4,21 +4,29 @@ import { sign, verify } from "jsonwebtoken";
 const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = process.env;
 
 export const createToken = payload => {
-  return sign({ userId: payload }, ACCESS_TOKEN_SECRET, {
-    expiresIn: "1m"
-  });
+  return sign(
+    { userId: payload.userId, tokenversion: payload.tokenversion },
+    ACCESS_TOKEN_SECRET,
+    {
+      expiresIn: "15m"
+    }
+  );
 };
 
 export const refreshToken = payload => {
-  return sign({ userId: payload }, REFRESH_TOKEN_SECRET, {
-    expiresIn: "3d"
-  });
+  return sign(
+    { userId: payload.userId, tokenversion: payload.tokenversion },
+    REFRESH_TOKEN_SECRET,
+    {
+      expiresIn: "3d"
+    }
+  );
 };
 
 export const sendRefreshToken = (res, token) => {
   res.cookie("jid", token, {
     httpOnly: true,
-    path: "/"
+    path: "/refresh_token"
   });
 };
 

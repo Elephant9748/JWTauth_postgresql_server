@@ -16,6 +16,7 @@
     "apollo-server-express": "^2.9.7",
     "bcrypt": "^3.0.6",
     "connect-redis": "^4.0.3",
+    "cookie-parser": "^1.4.4",
     "cryptorjs": "^3.0.0",
     "dataloader": "^1.4.0",
     "dotenv": "^8.2.0",

@@ -13,6 +13,10 @@ export default (sequelize, DataType) => {
         },
         password: {
           type: DataType.STRING
+        },
+        tokenversion: {
+          type: DataType.INTEGER,
+          defaultValue: 0,
         }
       },
       {
