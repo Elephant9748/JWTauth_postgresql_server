@@ -33,6 +33,6 @@
   },
   "scripts": {
     "start": "nodemon --exec babel-node index.js",
-    "build": "node -r esm index.js"
+    "Build": "npx apollo service:push --endpoint=http://localhost:4000"
   }
 }
