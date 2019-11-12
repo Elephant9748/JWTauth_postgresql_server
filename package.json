@@ -5,14 +5,12 @@
   "repository": "https://github.com/BigOrt/postgresql_server.git",
   "author": "'BigOrt' <'adytamasurya@gmail.com'>",
   "license": "MIT",
-  "devDependencies": {
+  "devDependencies": {},
+  "dependencies": {
     "@babel/cli": "^7.7.0",
     "@babel/core": "^7.7.2",
     "@babel/node": "^7.7.0",
     "@babel/preset-env": "^7.7.1",
-    "nodemon": "^1.19.4"
-  },
-  "dependencies": {
     "apollo-server-express": "^2.9.7",
     "bcrypt": "^3.0.6",
     "connect-redis": "^4.0.3",
@@ -26,6 +24,7 @@
     "graphql": "^14.5.8",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.15",
+    "nodemon": "^1.19.4",
     "pg": "^7.12.1",
     "pg-hstore": "^2.3.3",
     "redis": "^2.8.0",
