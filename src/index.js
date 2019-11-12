@@ -15,7 +15,7 @@ import { getAuth, createToken } from "./authjwt";
 import { verify } from "jsonwebtoken";
 
 const {
-  APP_PORT,
+  PORT,
   NODE_ENV,
   REFRESH_TOKEN_SECRET,
 } = process.env;
@@ -129,7 +129,7 @@ const startServer = async () => {
 
     const httpServer = http.createServer(app);
     server.installSubscriptionHandlers(httpServer);
-    httpServer.listen({ port: APP_PORT || 4000 }, () => {
+    httpServer.listen({ port: PORT || 4000 }, () => {
       console.log(
         `🚀 Server ready at http://localhost:${APP_PORT}${server.graphqlPath}`
       );
