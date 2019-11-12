@@ -2,6 +2,7 @@ import { ApolloServer, PubSub } from "apollo-server-express";
 import express from "express";
 import http from "http";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 
 import "dotenv/config";
 
@@ -31,6 +32,12 @@ const startServer = async () => {
       });
 
     const app = express();
+    // app.use(
+    //   cors({
+    //     origin: "REACT FRONT END HOST",
+    //     credentials: true
+    //   })
+    // );
     app.use(cookieParser());
     app.post("/refresh_token", async (req, res) => {
       //get token
@@ -94,10 +101,10 @@ const startServer = async () => {
       resolvers,
       playground: IN_PROD
         ? {
-          settings: {
-            "request.credentials": "include"
+            settings: {
+              "request.credentials": "include"
+            }
           }
-        }
         : false,
       introspection: IN_PROD ? true : false,
       context: ({ req, res, connection }) => ({
@@ -121,7 +128,7 @@ const startServer = async () => {
       }
     });
 
-    server.applyMiddleware({ app });
+    server.applyMiddleware({ app, cors: false });
 
     const httpServer = http.createServer(app);
     server.installSubscriptionHandlers(httpServer);
