@@ -14,11 +14,7 @@ import { batchBooks, batchPersons } from "./mydataloader";
 import { getAuth, createToken } from "./authjwt";
 import { verify } from "jsonwebtoken";
 
-const {
-  PORT,
-  NODE_ENV,
-  REFRESH_TOKEN_SECRET,
-} = process.env;
+const { PORT, NODE_ENV, REFRESH_TOKEN_SECRET } = process.env;
 const IN_PROD = NODE_ENV === "production";
 
 const startServer = async () => {
@@ -27,7 +23,7 @@ const startServer = async () => {
       .authenticate()
       .then(() => {
         console.log("Connection has been established successfully.");
-        // sync table and schema 
+        // sync table and schema
         // await ps.sequelize.sync().then(() => console.log(" ==>  Sync models ... success !"));
       })
       .catch(err => {
@@ -37,7 +33,6 @@ const startServer = async () => {
     const app = express();
     app.use(cookieParser());
     app.post("/refresh_token", async (req, res) => {
-
       //get token
       const token = req.cookies.jid;
       if (!token) {
@@ -60,7 +55,7 @@ const startServer = async () => {
           msg: message || ""
         });
       }
-      
+
       //find user on db
       const user = await ps.User.findOne({ where: { userId: payload.userId } });
       if (!user) {
@@ -72,7 +67,7 @@ const startServer = async () => {
       }
 
       //revoke access token !need more dev for this
-      if(user.tokenversion !== payload.tokenversion){
+      if (user.tokenversion !== payload.tokenversion) {
         return res.send({
           rToken: false,
           accessToken: "",
