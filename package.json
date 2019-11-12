@@ -32,6 +32,6 @@
     "sequelize": "^5.21.2"
   },
   "scripts": {
-    "start": "node --exec babel-node index.js"
+    "start": "nodemon --exec babel-node index.js"
   }
 }

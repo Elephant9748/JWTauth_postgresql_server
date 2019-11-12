@@ -127,10 +127,10 @@ const startServer = async () => {
     server.installSubscriptionHandlers(httpServer);
     httpServer.listen({ port: PORT || 4000 }, () => {
       console.log(
-        `🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`
+        `🚀Server ready at http://localhost:${PORT}${server.graphqlPath}`
       );
       console.log(
-        `🚀 Subscriptions ready at ws://localhost:${PORT}${server.subscriptionsPath}`
+        `🚀Subscriptions ready at ws://localhost:${PORT}${server.subscriptionsPath}`
       );
     });
   } catch (e) {
