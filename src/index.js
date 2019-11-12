@@ -129,7 +129,7 @@ const startServer = async () => {
 
     const httpServer = http.createServer(app);
     server.installSubscriptionHandlers(httpServer);
-    httpServer.listen({ port: APP_PORT }, () => {
+    httpServer.listen({ port: APP_PORT || 4000 }, () => {
       console.log(
         `🚀 Server ready at http://localhost:${APP_PORT}${server.graphqlPath}`
       );
