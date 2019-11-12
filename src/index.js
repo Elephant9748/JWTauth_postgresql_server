@@ -93,12 +93,13 @@ const startServer = async () => {
       typeDefs,
       resolvers,
       playground: IN_PROD
-        ? false
-        : {
-            settings: {
-              "request.credentials": "include"
-            }
-          },
+        ? {
+          settings: {
+            "request.credentials": "include"
+          }
+        }
+        : false,
+      introspection: IN_PROD ? true : false,
       context: ({ req, res, connection }) => ({
         req,
         res,
