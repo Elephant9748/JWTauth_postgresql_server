@@ -5,7 +5,7 @@ import cookieParser from "cookie-parser";
 
 import "dotenv/config";
 
-import typeDefs from "./typeDefs";
+import typeDefs from "./typedefs";
 import resolvers from "./resolvers";
 import ps from "./models";
 import Dataloader from "dataloader";
