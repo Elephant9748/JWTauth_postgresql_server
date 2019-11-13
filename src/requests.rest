@@ -16,9 +16,25 @@ POST http://localhost:4000/refresh_token HTTP/1.1 content-type: application/json
 
 
 ###
-POST http://localhost:4000/refresh_token
-Cookie: jid=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI4OTBhOTU1MS1mMzBjLTRhZmYtYjQwNC05MmRlODNhNWY1YTciLCJ0b2tlbnZlcnNpb24iOjIsImlhdCI6MTU3MzQ3OTU4MCwiZXhwIjoxNTczNzM4NzgwfQ.NF5DKczAqaXR2hFPLDeJKAtAi5fahlKGErDGz4VJGJI
+POST http://localhost:4000/refresh_token 
+Cookie: jid=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI4YjMyYmNiNC00NDFkLTRmYzAtOGViYy1mZTJmNjc1YjdkOTAiLCJ0b2tlbnZlcnNpb24iOjAsImlhdCI6MTU3MzYyNDg1OCwiZXhwIjoxNTczODg0MDU4fQ.0IrRhokA5hdCRYoeYRGs91GIjgIXKga4yci1GUJhR0E
 
 ###
 POST https://graphql-myapp.herokuapp.com/refresh_token
 Cookie: jid=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI4OTBhOTU1MS1mMzBjLTRhZmYtYjQwNC05MmRlODNhNWY1YTciLCJ0b2tlbnZlcnNpb24iOjQsImlhdCI6MTU3MzU3OTE0OSwiZXhwIjoxNTczODM4MzQ5fQ.u_EePcvnYmXK_F001BC9qCzg2gmo9V9DOa8_3dL0csA
+
+###
+
+POST http://localhost:4000/graphql HTTP/1.1
+Content-Type: application/json
+X-Request-Type: GraphQL
+authorization : Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI4OTBhOTU1MS1mMzBjLTRhZmYtYjQwNC05MmRlODNhNWY1YTciLCJ0b2tlbnZlcnNpb24iOjksImlhdCI6MTU3MzYyNjA2MSwiZXhwIjoxNTczNjI2MDc2fQ.RU5GGD7-yLoHZi3Fp1ZxvMhuswqEwNmwExNlHj8zanQ
+
+query{
+    me {
+      userId
+      name
+    }
+  }
+
+

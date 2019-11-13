@@ -20,24 +20,14 @@ const IN_PROD = NODE_ENV === "production";
 
 const startServer = async () => {
   try {
-    await ps.sequelize
-      .authenticate()
-      .then(() => {
-        console.log("Connection has been established successfully.");
-        // sync table and schema
-        // await ps.sequelize.sync().then(() => console.log(" ==>  Sync models ... success !"));
-      })
-      .catch(err => {
-        console.error("Unable to connect to the database:", err);
-      });
-
     const app = express();
-    // app.use(
-    //   cors({
-    //     origin: "REACT FRONT END HOST",
-    //     credentials: true
-    //   })
-    // );
+    app.use(
+      cors({
+        //REACT FRONT END HOST
+        origin: "http://localhost:3000",
+        credentials: true
+      })
+    );
     app.use(cookieParser());
     app.post("/refresh_token", async (req, res) => {
       //get token
@@ -92,6 +82,17 @@ const startServer = async () => {
         msg: ""
       });
     });
+
+    await ps.sequelize
+      .authenticate()
+      .then(() => {
+        console.log("Connection has been established successfully.");
+        // sync table and schema
+        // await ps.sequelize.sync().then(() => console.log(" ==>  Sync models ... success !"));
+      })
+      .catch(err => {
+        console.error("Unable to connect to the database:", err);
+      });
 
     //addind Subscriptions
     const pubsub = new PubSub();

@@ -5,10 +5,10 @@ const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = process.env;
 
 export const createToken = payload => {
   return sign(
-    { userId: payload.userId, tokenversion: payload.tokenversion },
+    { userId: payload.userId },
     ACCESS_TOKEN_SECRET,
     {
-      expiresIn: "15m"
+      expiresIn: "15s"
     }
   );
 };
@@ -31,6 +31,7 @@ export const sendRefreshToken = (res, token) => {
 };
 
 export const isAuth = payload => {
+  console.log(payload);
   if (!payload) {
     throw new AuthenticationError("Not authorization !");
   }
