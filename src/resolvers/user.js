@@ -15,7 +15,7 @@ export default {
       return await ps.User.findAll();
     },
     me: async (__, _args, { ps, payload }) => {
-      
+      // auth for query !
       console.log(payload);
       isAuth(payload);
       return await ps.User.findOne({ where: { userId: payload.userId } });
@@ -43,7 +43,6 @@ export default {
       return user;
     },
     logIn: async (__, { name, password }, { ps, res }) => {
-
       const user = await ps.User.findOne({ where: { name: name } });
       const mssg = "name or password incorrect !";
       if (!user) {
@@ -66,8 +65,7 @@ export default {
     },
     revokeTokenForUser: async (__, args, { ps }) => {
       const id = args.userId;
-      const revoke = await ps.User
-        .findOne({ where: { userId: id } })
+      const revoke = await ps.User.findOne({ where: { userId: id } })
         .then(user => user.increment("tokenversion", { by: 1 }))
         .then(user => {
           const reload = user.reload();
@@ -77,6 +75,16 @@ export default {
           return true;
         });
       return revoke;
+    },
+    logout: (__, _args, { res }) => {
+      try {
+        sendRefreshToken(res, "");
+      } catch {
+        return false;
+      }
+      return true;
+      // or
+      // res.clearCookie
     }
   }
 };

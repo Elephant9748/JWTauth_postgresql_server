@@ -2,7 +2,7 @@ import { ApolloServer, PubSub } from "apollo-server-express";
 import express from "express";
 import http from "http";
 import cookieParser from "cookie-parser";
-// import cors from "cors";
+import cors from "cors";
 
 import "dotenv/config";
 
@@ -15,19 +15,19 @@ import { batchBooks, batchPersons } from "./mydataloader";
 import { getAuth, createToken } from "./authjwt";
 import { verify } from "jsonwebtoken";
 
-const { PORT, NODE_ENV, REFRESH_TOKEN_SECRET } = process.env;
+const { CORS_URI, PORT, NODE_ENV, REFRESH_TOKEN_SECRET } = process.env;
 const IN_PROD = NODE_ENV === "production";
 
 const startServer = async () => {
   try {
     const app = express();
-    // app.use(
-    //   cors({
-    //     //REACT FRONT END HOST
-    //     origin: "http://localhost:3000",
-    //     credentials: true
-    //   })
-    // );
+    app.use(
+      cors({
+        //REACT FRONT END HOST
+        origin: CORS_URI,
+        credentials: true
+      })
+    );
     app.use(cookieParser());
     app.post("/refresh_token", async (req, res) => {
       //get token

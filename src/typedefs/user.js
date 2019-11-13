@@ -10,6 +10,7 @@ export default gql`
     newUser(name: String!, password: String!):User
     logIn(name: String!, password: String!):loginResponse
     revokeTokenForUser(userId: ID!): Boolean
+    logout:Boolean
   }
 
   type User {
